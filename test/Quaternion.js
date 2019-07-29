@@ -136,6 +136,20 @@ describe("Euler angles", function() {
     dEqual(eulerAngles.z,196).should.equal(true);
   });
 
+  it("equals ZXY (357.49933849719724, 47.128045514745146, 70.2459380619192) for Quaternion(0.213589, 0.338412, 0.534368, 0.744519)", function() {
+    var eulerAngles = new Quaternion(0.213589, 0.338412, 0.534368, 0.744519).getEulerAngles();
+    dEqual(eulerAngles.x,357.49933849719724).should.equal(true);
+    dEqual(eulerAngles.y,47.128045514745146).should.equal(true);
+    dEqual(eulerAngles.z,70.2459380619192).should.equal(true);
+  });
+
+  it("equals XYZ (45.00001966128281, 16.000032244738943, 78.00004142168498) for Quaternion(0.213589, 0.338412, 0.534368, 0.744519)", function() {
+    var eulerAngles = new Quaternion(0.213589, 0.338412, 0.534368, 0.744519).getEulerAngles("XYZ");
+    dEqual(eulerAngles.x,45.00001966128281).should.equal(true);
+    dEqual(eulerAngles.y,16.000032244738943).should.equal(true);
+    dEqual(eulerAngles.z,78.00004142168498).should.equal(true);
+  });
+
   it("equals (90,0,90) when the rotations (0,0,90) and (90,0,0) are applied respectively", function() {
     var q1 = Quaternion.Euler(0,0,90);
     var q2 = Quaternion.Euler(90,0,0);

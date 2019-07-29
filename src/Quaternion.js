@@ -325,6 +325,44 @@ _Quaternion.prototype.mul = function(quaternion) {
     -this.x * quaternion.x  -  this.y * quaternion.y  -  this.z * quaternion.z  +  this.w * quaternion.w);
 };
 
+/**
+ * Returns the euler angles
+ *
+ * @param {String} angle order default ZXY
+ * @returns {Object} eulerAngles: {x:_, y:_, z:_}
+ */
+_Quaternion.prototype.getEulerAngles = function(order="ZXY" ) {
+  if(order == "ZXY"){
+    return _getEulerAngles(this);
+  }else if(order == "XYZ"){
+    var poleSum = this.y * this.w - this.z * this.x;
+    if (util.doublesEqual(poleSum, 0.5))
+      return {"y": 90, "z": 0, "x": 0};
+    else if (util.doublesEqual(poleSum, -0.5))
+      return {"y": -90, "z": 0, "x": 0};
+
+    var sqw = this.w * this.w;
+    var sqy = this.y * this.y;
+    var sqz = this.z * this.z;
+    var sqx = this.x * this.x;
+
+    //var _y = Math.atan2(2 * this.y * this.w - 2 * this.z * this.x, 1 - 2 * sqy  - 2 * sqx);
+    var _y = Math.asin(2 * this.y * this.w - 2 * this.z * this.x)
+    //var _z = Math.atan2(2 * this.z * this.w - 2 * this.y * this.x, 1 - 2 * sqz  - 2 * sqx);
+    var _z = Math.atan2(2 * this.y * this.x + 2 * this.z * this.w, 1 - 2 * sqz - 2 * sqy);
+    //var _x = Math.asin(2 * this.y * this.z + 2 * this.x * this.w);
+    var _x = Math.PI - Math.atan2(2 * this.y * this.z + 2 * this.x * this.w, 1 - 2 * sqz - 2 * sqw);
+
+    return {
+      "x": _normalizeRad(_x),
+      "y": _normalizeRad(_y),
+      "z": _normalizeRad(_z)
+    };
+  }else{
+    throw new Error('The euler angle order '+order+" isn't implemented yet");
+  }
+};
+
 _Quaternion.prototype.mulVector3 = function(vector3) {
   var num = this.x * 2;
   var num2 = this.y * 2;
