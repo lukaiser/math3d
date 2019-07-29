@@ -7,6 +7,7 @@ var Vector3 = require('./Vector3');
 var readonly = require('./readonlyProperty');
 var inherits = require('util').inherits;
 var util = require('./util');
+var numeric = require('numeric');
 
 var radToDeg = 180.0 / Math.PI;
 var degToRad = Math.PI / 180.0;
@@ -94,6 +95,39 @@ function _fromTwoVectors(a, b) {
 }
 
 /**
+ * @constructor
+ * Returns a quaternion for the average of an array of quaternions
+ *
+ * @param {Array} An array of quaternions
+ * @returns {Quaternion} quaternion
+ */
+function _fromAverageOfQuaternions(Q){
+  var Matrix4x4 = require('./Matrix4x4');
+  let A = new Matrix4x4();
+  Q.forEach(q => {
+    let x = q.x;
+    let y = q.y;
+    let z = q.z;
+    let w = q.w;
+    if(x < 0){
+      x = -x;
+      y = -y;
+      z = -z;
+      w = -w;
+    }
+    const qm1 = new Matrix4x4([x, y, z, w]);
+    const qm2 = new Matrix4x4([x, 0, 0, 0, y, 0, 0, 0, z, 0, 0, 0, w]);
+    A = A.add(qm2.mul(qm1));
+  });
+
+  A = A.mulScalar(1/Q.length)
+  const B = numeric.eig(A.rows);
+  const indexOfMaxValue = B.lambda.x.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+  const biggestEigenV = B.E.x[indexOfMaxValue];
+  return new _Quaternion(biggestEigenV[0], biggestEigenV[1], biggestEigenV[2], biggestEigenV[3]);
+}
+
+/**
  * Returns the euler angles for the given quaternion
  * The rotations for the euler angles are applied in the order: z then x then y
  *
@@ -133,6 +167,14 @@ function _normalizeRad(rad) {
   while (angle < 0)
       angle += 360;
   return angle;
+}
+
+function _isQuaternion(quaternion){
+  return (quaternion instanceof _Quaternion);
+}
+
+function _isQuaternionArray(arr) {
+  return Array.isArray(arr) && arr.every(_isQuaternion);
 }
 
 /**
@@ -224,6 +266,20 @@ _Quaternion.TwoVectors = function(a, b) {
     throw new TypeError("/b/ must be a Vector3.");
 
   return _fromTwoVectors(a, b);
+}
+
+/**
+ * @constructor
+ * Creates a unit quaternion as result of the average of an array of quaternions
+ *
+ * @param {Array} An array of quaternions
+ * @returns {Quaternion} unit quaternion
+ */
+_Quaternion.AverageOfQuaternions = function(Q) {
+  if(!_isQuaternionArray(Q))
+    throw new TypeError("/Q/ must be an array of quaternions.");
+
+  return _fromAverageOfQuaternions(Q);
 }
 
 /**

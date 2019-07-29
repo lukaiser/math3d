@@ -34,5 +34,8 @@
   "devDependencies": {
     "mocha": "*",
     "chai": "*"
+  },
+  "dependencies": {
+    "numeric": "^1.2.6"
   }
 }

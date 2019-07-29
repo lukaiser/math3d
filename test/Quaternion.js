@@ -105,6 +105,14 @@ describe("Quaternion", function() {
   it("equals two Vectors Up and Forward for euler angles (90,0,0)", function() {
     Quaternion.TwoVectors(Vector3.up, Vector3.forward).equals(Quaternion.Euler(90,0,0)).should.equal(true);
   });
+
+  it("equals average of (0.017, 0, 0, 1) and (-0.017, 0, 0, 1) for identity quaternion", function() {
+    Quaternion.AverageOfQuaternions([new Quaternion(0.017, 0, 0, 1), new Quaternion(-0.017, 0, 0, 1)]).equals(Quaternion.identity).should.equal(true);
+  });
+
+  it("equals average of 8 quaternions for identity quaternion", function() {
+    Quaternion.AverageOfQuaternions([new Quaternion(0.017, 0, 0, 1), new Quaternion(-0.017, 0, 0, 1), new Quaternion(0, 0.017, 0, 1), new Quaternion(0, -0.017, 0, 1), new Quaternion(0.017, 0.017, -0.000305, 1), new Quaternion(0.017, -0.017, 0.000305, 1), new Quaternion(-0.017, 0.017, 0.000305, 1), new Quaternion(-0.017, -0.017, -0.000305, 1)]).equals(Quaternion.identity).should.equal(true);
+  });
 });
 
 describe("Euler angles", function() {
