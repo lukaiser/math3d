@@ -89,6 +89,22 @@ describe("Quaternion", function() {
     angleAxis.axis.equals(Vector3.up).should.equal(true);
     angleAxis.angle.should.equal(90);
   });
+
+  it("equals two Vectors Up and Down for euler angles (0,0,180)", function() {
+    Quaternion.TwoVectors(Vector3.up, Vector3.down).equals(Quaternion.Euler(0,0,180)).should.equal(true);
+  });
+
+  it("equals two Vectors Up and Up for Identity Quaternion", function() {
+    Quaternion.TwoVectors(Vector3.up, Vector3.up).equals(Quaternion.identity).should.equal(true);
+  });
+
+  it("equals two Vectors Up and Right for euler angles (0,0,-90)", function() {
+    Quaternion.TwoVectors(Vector3.up, Vector3.right).equals(Quaternion.Euler(0,0,-90)).should.equal(true);
+  });
+
+  it("equals two Vectors Up and Forward for euler angles (90,0,0)", function() {
+    Quaternion.TwoVectors(Vector3.up, Vector3.forward).equals(Quaternion.Euler(90,0,0)).should.equal(true);
+  });
 });
 
 describe("Euler angles", function() {

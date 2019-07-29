@@ -70,6 +70,30 @@ function _fromAngleAxis(axis, angle) {
 }
 
 /**
+ * Returns a quaternion for the given two vectors
+ *
+ * @param {Vector3} vector a
+ * @param {Vector3} vector b
+ * @returns {Quaternion} quaternion
+ */
+function _fromTwoVectors(a, b) {
+  var dot =  a.dot(b);
+  if(dot < -0.999999){
+    var tempVec = Vector3.right.cross(a);
+    if(tempVec.magnitude < 0.000001){
+      tempVec = Vector3.up.cross(a);
+    }
+    tempVec = tempVec.normalize();
+    return _fromAngleAxis(tempVec, 180 * degToRad);
+  } else if(dot > 0.999999){
+    return new _Quaternion(0, 0, 0, 1)
+  }else{
+    var tempVec = a.cross(b);
+    return new _Quaternion(tempVec.x, tempVec.y, tempVec.z, 1+dot);
+  }
+}
+
+/**
  * Returns the euler angles for the given quaternion
  * The rotations for the euler angles are applied in the order: z then x then y
  *
@@ -183,6 +207,23 @@ _Quaternion.AngleAxis = function(axis, angle) {
     throw new TypeError("/angle/ must be a number.");
 
   return _fromAngleAxis(axis.normalize(), angle * degToRad);
+}
+
+/**
+ * @constructor
+ * Creates a unit quaternion from the fiven two vectors
+ *
+ * @param {Vector3} vector a
+ * @param {Vector3} vector b
+ * @returns {Quaternion} unit quaternion
+ */
+_Quaternion.TwoVectors = function(a, b) {
+  if(!(a instanceof Vector3))
+    throw new TypeError("/a/ must be a Vector3.");
+  if(!(b instanceof Vector3))
+    throw new TypeError("/b/ must be a Vector3.");
+
+  return _fromTwoVectors(a, b);
 }
 
 /**
