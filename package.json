@@ -36,6 +36,6 @@
     "chai": "*"
   },
   "dependencies": {
-    "numeric": "^1.2.6"
+    "numeric": "git+https://github.com/lukaiser/numeric.git"
   }
 }
