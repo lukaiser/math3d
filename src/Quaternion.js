@@ -123,7 +123,12 @@ function _fromAverageOfQuaternions(Q){
   A = A.mulScalar(1/Q.length)
   const B = numeric.eig(A.rows);
   const indexOfMaxValue = B.lambda.x.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-  return new _Quaternion(B.E.x[0][indexOfMaxValue], B.E.x[1][indexOfMaxValue], B.E.x[2][indexOfMaxValue], B.E.x[3][indexOfMaxValue]);
+  if(B.E.x[3][indexOfMaxValue] < 0){
+    return new _Quaternion(-B.E.x[0][indexOfMaxValue], -B.E.x[1][indexOfMaxValue], -B.E.x[2][indexOfMaxValue], -B.E.x[3][indexOfMaxValue]);
+  }else{
+    return new _Quaternion(B.E.x[0][indexOfMaxValue], B.E.x[1][indexOfMaxValue], B.E.x[2][indexOfMaxValue], B.E.x[3][indexOfMaxValue]);
+  }
+  
 }
 
 /**
