@@ -113,6 +113,9 @@ describe("Quaternion", function() {
   it("equals average of 8 quaternions for identity quaternion", function() {
     Quaternion.AverageOfQuaternions([new Quaternion(0.017, 0, 0, 1), new Quaternion(-0.017, 0, 0, 1), new Quaternion(0, 0.017, 0, 1), new Quaternion(0, -0.017, 0, 1), new Quaternion(0.017, 0.017, -0.000305, 1), new Quaternion(0.017, -0.017, 0.000305, 1), new Quaternion(-0.017, 0.017, 0.000305, 1), new Quaternion(-0.017, -0.017, -0.000305, 1)]).equals(Quaternion.identity).should.equal(true);
   });
+  it("equals average of 4 quaternions for (0.1104, 0.8866, -0.0341, 0.4479)", function() {
+    Quaternion.AverageOfQuaternions([new Quaternion(0.10297483417688628, 0.8814428707420268, -0.03413231031245159, 0.45966252244122763), new Quaternion(0.10830385895165914, 0.8944101079825333, -0.025044369512129457, 0.43321312587523503), new Quaternion(0.10252539031308919, 0.8815616941381494, -0.03554040185251982, 0.45942834436458757), new Quaternion(0.10736656208641421, 0.8946767516211049, -0.027546480475525405, 0.4327437149952192)]).equals(new Quaternion(0.10530555461967625, 0.8881316042335635, -0.030569636134896917, 0.4463165816708352)).should.equal(true);
+  });
 });
 
 describe("Euler angles", function() {
