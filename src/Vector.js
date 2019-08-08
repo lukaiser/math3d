@@ -6,6 +6,8 @@ Copyrights licensed under MIT License. See the accompanying LICENSE file for ter
 var readonly = require('./readonlyProperty');
 var util = require('./util');
 
+var radToDeg = 180.0 / Math.PI;
+
 /**
  * Returns the magnitude of the vector
  *
@@ -187,6 +189,21 @@ _Vector.prototype.distanceTo = function (vector) {
   }
 
   return Math.sqrt(result);
+};
+
+/**
+ * Calculates the angle between two vectors
+ *
+ * @param {Vector} vector
+ * @returns {Number} angle
+ */
+_Vector.prototype.angleTo = function (vector) {
+  if (!(vector instanceof _Vector))
+    throw new TypeError("Distance can be measured between two Vectors.");
+  if (this.values.length != vector.values.length)
+    throw new TypeError('Vectors should have the same length.');
+
+  return Math.acos(this.dot(vector)/(this.magnitude*vector.magnitude))*radToDeg;
 };
 
 _Vector.prototype.toString = function() {

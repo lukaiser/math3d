@@ -43,6 +43,10 @@ describe("Vector3(4, 2, 42)", function() {
   it("equals (8, 1, 42) when scaled with (2, 0.5, 1)", function() {
     existenceVector3.scale(new Vector3(2, 0.5, 1)).equals(new Vector3(8,1,42)).should.equal(true);
   });
+
+  it("and (7, 11, -30) stand with ... degrees to each other", function() {
+    existenceVector3.angleTo(new Vector3(7, 11, -30)).should.equal(151.13767054497802);
+  });
 });
 
 describe("Vector4(4, 2, 42, 1)", function() {
@@ -68,6 +72,10 @@ describe("Vector4(4, 2, 42, 1)", function() {
 
   it("has dimension 4", function() {
     existenceVector4.dimension.should.equal(4);
+  });
+
+  it("and (7, 11, -30, 34) stand with ... degrees to each other", function() {
+    existenceVector4.angleTo(new Vector4(7, 11, -30, 34)).should.equal(126.15446514182099);
   });
 });
 
