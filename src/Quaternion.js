@@ -35,25 +35,70 @@ function _normalizedCoordinates(x, y, z, w) {
  * The rotations for the euler angles are applied in the order: z then x then y
  *
  * @param {Number} x y z: euler angles in radians
+ * @param {String} angle order (default ZXY)
  * @returns {Quaternion} quaternion
  */
-function _fromEuler(x, y, z) {
-  x = x / 2;
-  y = y / 2;
-  z = z / 2;
+function _fromEuler(x, y, z, order="ZXY") {
+    var cos = Math.cos;
+		var sin = Math.sin;
 
-  var c1 = Math.cos(y),
-      s1 = Math.sin(y),
-      c2 = Math.cos(x),
-      s2 = Math.sin(x),
-      c3 = Math.cos(z),
-      s3 = Math.sin(z);
+		var c1 = cos( x / 2 );
+		var c2 = cos( y / 2 );
+		var c3 = cos( z / 2 );
 
-  return new _Quaternion(
-      s1 * c2 * s3 + c1 * s2 * c3,
-      s1 * c2 * c3 - c1 * s2 * s3,
-      c1 * c2 * s3 - s1 * s2 * c3,
-      c1 * c2 * c3 + s1 * s2 * s3);
+		var s1 = sin( x / 2 );
+		var s2 = sin( y / 2 );
+    var s3 = sin( z / 2 );
+
+		if ( order === 'ZYX' ) {
+
+      return new _Quaternion(
+			  s1 * c2 * c3 + c1 * s2 * s3,
+			  c1 * s2 * c3 - s1 * c2 * s3,
+			  c1 * c2 * s3 + s1 * s2 * c3,
+			  c1 * c2 * c3 - s1 * s2 * s3);
+
+		} else if ( order === 'ZXY' ) {
+
+      return new _Quaternion(
+			  s1 * c2 * c3 + c1 * s2 * s3,
+			  c1 * s2 * c3 - s1 * c2 * s3,
+			  c1 * c2 * s3 - s1 * s2 * c3,
+			  c1 * c2 * c3 + s1 * s2 * s3);
+
+		} else if ( order === 'YXZ' ) {
+
+      return new _Quaternion(
+        s1 * c2 * c3 - c1 * s2 * s3,
+			  c1 * s2 * c3 + s1 * c2 * s3,
+			  c1 * c2 * s3 + s1 * s2 * c3,
+			  c1 * c2 * c3 - s1 * s2 * s3);
+
+		} else if ( order === 'XYZ' ) {
+
+      return new _Quaternion(
+			  s1 * c2 * c3 - c1 * s2 * s3,
+			  c1 * s2 * c3 + s1 * c2 * s3,
+			  c1 * c2 * s3 - s1 * s2 * c3,
+			  c1 * c2 * c3 + s1 * s2 * s3);
+
+		} else if ( order === 'XZY' ) {
+
+      return new _Quaternion(
+			  s1 * c2 * c3 + c1 * s2 * s3,
+			  c1 * s2 * c3 + s1 * c2 * s3,
+        c1 * c2 * s3 - s1 * s2 * c3,
+        c1 * c2 * c3 - s1 * s2 * s3);
+
+		} else if ( order === 'YZX' ) {
+
+      return new _Quaternion(
+			  s1 * c2 * c3 - c1 * s2 * s3,
+			  c1 * s2 * c3 - s1 * c2 * s3,
+			  c1 * c2 * s3 + s1 * s2 * c3,
+			  c1 * c2 * c3 + s1 * s2 * s3);
+
+		}
 }
 
 /**
@@ -229,13 +274,17 @@ function _Quaternion(x, y, z, w) {
  * Creates a unit quaternion from the given euler angles in degrees
  *
  * @param {Number} x, y, z
+ * @param {String} angle order (default ZXY)
  * @returns {Quaternion} unit quaternion
  */
-_Quaternion.Euler = function(x, y, z) {
+_Quaternion.Euler = function(x, y, z, order="ZXY") {
   if(!util.isNumber(x) || !util.isNumber(y) || !util.isNumber(z))
     throw new TypeError("Arguments must be numbers.");
+  const orderOptions = ['XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'];
+  if(!orderOptions.includes(order))
+    throw new TypeError("The order isn't supported.");
 
-  return _fromEuler(x * degToRad, y * degToRad, z * degToRad);
+  return _fromEuler(x * degToRad, y * degToRad, z * degToRad, order);
 }
 
 /**

@@ -64,6 +64,10 @@ describe("Quaternion", function() {
     Quaternion.Euler(0,0,90).equals(new Quaternion(0,0,invsqrt2,invsqrt2)).should.equal(true);
   });
 
+  it("equals (x: 0.375, y: 0.166, z: 0.283, w: 0.867) for euler angles (40,30,25,XYZ)", function() {
+    Quaternion.Euler(40,30,25,"XYZ").equals(new Quaternion(0.26989474054734813,0.30894959935305055,0.1100334560435672,0.9053174098820688)).should.equal(true);
+  });
+
   it("moves Vector.right to Vector.up for euler angles (0,0,90)", function() {
     Quaternion.Euler(0,0,90).mulVector3(Vector3.right).equals(Vector3.up).should.equal(true);
   });
@@ -163,6 +167,13 @@ describe("Euler angles", function() {
     dEqual(eulerAngles.x,45.00001966128281).should.equal(true);
     dEqual(eulerAngles.y,16.000032244738943).should.equal(true);
     dEqual(eulerAngles.z,78.00004142168498).should.equal(true);
+  });
+
+  it("equals XYZ (40, 30, 25) for euler angles (40,30,25,XYZ)", function() {
+    var eulerAngles = Quaternion.Euler(40,30,25,"XYZ").getEulerAngles("XYZ");
+    dEqual(eulerAngles.x,40).should.equal(true);
+    dEqual(eulerAngles.y,30).should.equal(true);
+    dEqual(eulerAngles.z,25).should.equal(true);
   });
 
   it("equals (90,0,90) when the rotations (0,0,90) and (90,0,0) are applied respectively", function() {
