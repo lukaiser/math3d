@@ -123,6 +123,8 @@ function _fromAngleAxis(axis, angle) {
  * @returns {Quaternion} quaternion
  */
 function _fromTwoVectors(a, b) {
+  a = a.normalize();
+  b = b.normalize();
   var dot =  a.dot(b);
   if(dot < -0.999999){
     var tempVec = Vector3.right.cross(a);
@@ -135,7 +137,8 @@ function _fromTwoVectors(a, b) {
     return new _Quaternion(0, 0, 0, 1)
   }else{
     var tempVec = a.cross(b);
-    return new _Quaternion(tempVec.x, tempVec.y, tempVec.z, 1+dot);
+    tempVec = tempVec.normalize();
+    return _fromAngleAxis(tempVec, Math.acos(dot));
   }
 }
 
